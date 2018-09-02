@@ -92,7 +92,7 @@
           this._bindEvent()
         }
       },
-      _bindEvent() {
+      _bindEvent: function () {
         var $cube = this._$cube
         var $coordinates = this._$coordinates
         var $acceleration = this._$acceleration
