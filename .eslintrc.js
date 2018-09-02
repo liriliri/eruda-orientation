@@ -7,8 +7,6 @@ module.exports = {
   },
   extends: 'eslint:recommended',
   rules: {
-    indent: ['error', 4],
-    quotes: ['error', 'single'],
-    semi: ['error', 'always']
+    'no-extra-semi': ['off']
   }
 }
