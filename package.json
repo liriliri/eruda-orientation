@@ -1,0 +1,24 @@
+{
+  "name": "eruda-orientation",
+  "version": "1.0.0",
+  "main": "eruda-orientation.js",
+  "scripts": {
+    "build": "uglifyjs eruda-orientation.js -o eruda-orientation.min.js --mangle",
+    "lint": "eslint eruda-orientation.js",
+    "ci": "npm run lint && npm run build",
+    "dev": "nws -p 3000",
+    "format": "prettier *.js .eslintrc.js --write"
+  },
+  "keywords": [
+    "eruda",
+    "plugin"
+  ],
+  "author": "",
+  "devDependencies": {
+    "eruda": "^1.5.2",
+    "eslint": "^4.12.1",
+    "nws": "^1.1.1",
+    "prettier": "^1.14.2",
+    "uglify-js": "^3.2.0"
+  }
+}

@@ -1,0 +1,7 @@
+.gitignore
+.npmignore
+.prettierignore
+prettier.config.js
+.eslintrc.js
+.travis.yml
+index.html
