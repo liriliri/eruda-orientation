@@ -1,6 +1,6 @@
 {
   "name": "eruda-orientation",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "eruda-orientation.js",
   "description": "Eruda plugin for testing orientation api",
   "scripts": {
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/liriliri/eruda-orientation#readme",
   "devDependencies": {
-    "eruda": "^1.5.2",
+    "eruda": "^2.0.0",
     "eslint": "^4.12.1",
     "nws": "^1.1.1",
     "prettier": "^1.14.2",

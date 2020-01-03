@@ -19,25 +19,26 @@
         this._style = util.evalCss(
           [
             '.eruda-dev-tools .eruda-tools .eruda-orientation {padding: 10px; overflow-y: auto; -webkit-overflow-scrolling: touch;}',
-            '.eruda-not-supported {background: #f44336; color: #fff; padding: 10px; border-radius: 4px; text-align: center; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .05), 0 1px 4px 0 rgba(0, 0, 0, .08), 0 3px 1px -2px rgba(0, 0, 0, .2)}',
-            '.eruda-cube {width: 150px; height: 150px; color: #fff; position: relative; margin: 50px auto; -webkit-transform-style: preserve-3d; transform-style: preserve-3d;}',
-            '.eruda-face {width: 150px; height: 150px; position: absolute; font-size: 80px; text-align: center; line-height: 150px; background-color: #2196f3; box-shadow: inset 0 0 20px #1565c0; opacity: 0.6; }',
+            '.eruda-not-supported {background: var(--console-error-background); color: var(--console-error-foreground); border: 1px solid var(--console-error-border);padding: 10px; text-align: center;}',
+            '.eruda-cube {width: 150px; height: 150px; color: var(--foreground); position: relative; margin: 50px auto; -webkit-transform-style: preserve-3d; transform-style: preserve-3d;}',
+            '.eruda-face {width: 150px; height: 150px; position: absolute; font-size: 80px; text-align: center; line-height: 150px; background-color: var(--accent); box-shadow: inset 0 0 20px var(--foreground); opacity: 0.6; }',
             '.eruda-one {-webkit-transform: translateZ(75px); transform: translateZ(75px);}',
             '.eruda-two {-webkit-transform: rotateY(90deg) translateZ(75px); transform: rotateY(90deg) translateZ(75px);}',
             '.eruda-three {-webkit-transform: rotateY(180deg) translateZ(75px); transform: rotateY(180deg) translateZ(75px);}',
             '.eruda-four {-webkit-transform: rotateY(-90deg) translateZ(75px); transform: rotateY(-90deg) translateZ(75px);}',
             '.eruda-five {-webkit-transform: rotateX(90deg) translateZ(75px); transform: rotateX(90deg) translateZ(75px);}',
             '.eruda-six {-webkit-transform: rotateX(-90deg) translateZ(75px) rotate(0deg); transform: rotateX(-90deg) translateZ(75px) rotate(0deg);}',
-            '.eruda-orientation-data {margin: 10px; border-radius: 4px; background: #fff; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05), 0 1px 4px 0 rgba(0, 0, 0, 0.08), 0 3px 1px -2px rgba(0, 0, 0, 0.2);}',
+            '.eruda-orientation-data {margin: 10px;}',
             '.eruda-content {padding: 10px;}',
             'table {width: 100%;}',
-            'table td {border: 1px solid #eceffe; padding: 10px;}',
+            'table td {border: 1px solid var(--border); padding: 10px;}',
             '.eruda-key {width: 150px;}',
             'sup {vertical-align: super; font-size: smaller;}'
           ].join('.eruda-dev-tools .eruda-tools .eruda-orientation ')
         )
         var isSupported =
           window.DeviceOrientationEvent && window.DeviceMotionEvent
+
         if (!isSupported) {
           $el.html(
             '<div class="eruda-not-supported">Not supported for this browser!</div>'
@@ -92,7 +93,7 @@
           this._bindEvent()
         }
       },
-      _bindEvent: function () {
+      _bindEvent: function() {
         var $cube = this._$cube
         var $coordinates = this._$coordinates
         var $acceleration = this._$acceleration
