@@ -1,5 +1,5 @@
 // https://code.tutsplus.com/tutorials/an-introduction-to-the-device-orientation-api--cms-21067
-;(function(root, factory) {
+;(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define([], factory)
   } else if (typeof module === 'object' && module.exports) {
@@ -7,14 +7,14 @@
   } else {
     root.erudaOrientation = factory()
   }
-})(this, function() {
-  return function(eruda) {
+})(this, function () {
+  return function (eruda) {
     var Tool = eruda.Tool
     var util = eruda.util
 
     var Orientation = Tool.extend({
       name: 'orientation',
-      init: function($el) {
+      init: function ($el) {
         this.callSuper(Tool, 'init', arguments)
         this._style = util.evalCss(
           [
@@ -33,7 +33,7 @@
             'table {width: 100%;}',
             'table td {border: 1px solid var(--border); padding: 10px;}',
             '.eruda-key {width: 150px;}',
-            'sup {vertical-align: super; font-size: smaller;}'
+            'sup {vertical-align: super; font-size: smaller;}',
           ].join('.eruda-dev-tools .eruda-tools .eruda-orientation ')
         )
         var isSupported =
@@ -81,7 +81,7 @@
               '      </tbody>',
               '    </table>',
               '  </div>',
-              '</div>'
+              '</div>',
             ].join('')
           )
           this._$cube = $el.find('.eruda-cube')
@@ -93,7 +93,7 @@
           this._bindEvent()
         }
       },
-      _bindEvent: function() {
+      _bindEvent: function () {
         var $cube = this._$cube
         var $coordinates = this._$coordinates
         var $acceleration = this._$acceleration
@@ -102,7 +102,7 @@
         var $interval = this._$interval
 
         var self = this
-        this._onDeviceorientation = function(e) {
+        this._onDeviceorientation = function (e) {
           if (!self._isShow) return
 
           $cube.css(
@@ -128,7 +128,7 @@
               ')'
           )
         }
-        this._onDevicemotion = function(e) {
+        this._onDevicemotion = function (e) {
           if (!self._isShow) return
 
           var acceleration = e.acceleration
@@ -166,18 +166,50 @@
 
           $interval.text(e.interval + 'ms')
         }
-        window.addEventListener('deviceorientation', this._onDeviceorientation)
-        window.addEventListener('devicemotion', this._onDevicemotion)
+
+        function requestOrientationPermission() {
+          DeviceOrientationEvent.requestPermission().then(function (response) {
+            if (response === 'granted') {
+              window.addEventListener(
+                'deviceorientation',
+                this._onDeviceorientation
+              )
+              $cube.off('click', requestOrientationPermission)
+            }
+          })
+        }
+        if (DeviceOrientationEvent.requestPermission) {
+          $cube.on('click', requestOrientationPermission)
+        } else {
+          window.addEventListener(
+            'deviceorientation',
+            this._onDeviceorientation
+          )
+        }
+
+        function requestMotionPermission() {
+          DeviceMotionEvent.requestPermission().then(function (response) {
+            if (response === 'granted') {
+              window.addEventListener('devicemotion', this._onDevicemotion)
+              $cube.off('click', requestMotionPermission)
+            }
+          })
+        }
+        if (DeviceMotionEvent.requestPermission) {
+          $cube.on('click', requestMotionPermission)
+        } else {
+          window.addEventListener('devicemotion', this._onDevicemotion)
+        }
       },
-      show: function() {
+      show: function () {
         this.callSuper(Tool, 'show', arguments)
         this._isShow = true
       },
-      hide: function() {
+      hide: function () {
         this.callSuper(Tool, 'hide', arguments)
         this._isShow = false
       },
-      destroy: function() {
+      destroy: function () {
         this.callSuper(Tool, 'destroy', arguments)
         util.evalCss.remove(this._style)
         window.removeEventListener(
@@ -185,7 +217,7 @@
           this._onDeviceorientation
         )
         window.removeEventListener('devicemotion', this._onDevicemotion)
-      }
+      },
     })
 
     return new Orientation()

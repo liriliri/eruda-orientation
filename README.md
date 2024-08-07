@@ -1,13 +1,13 @@
 # eruda-orientation
 
 [![NPM version][npm-image]][npm-url]
-[![Build status][travis-image]][travis-url]
+[![Build status][ci-image]][ci-url]
 [![License][license-image]][npm-url]
 
 [npm-image]: https://img.shields.io/npm/v/eruda-orientation.svg
 [npm-url]: https://npmjs.org/package/eruda-orientation
-[travis-image]: https://img.shields.io/travis/liriliri/eruda-orientation.svg
-[travis-url]: https://travis-ci.org/liriliri/eruda-orientation
+[ci-image]: https://img.shields.io/github/actions/workflow/status/liriliri/eruda-orientation/main.yml?branch=master&style=flat-square
+[ci-url]: https://github.com/liriliri/eruda-orientation/actions/workflows/main.yml
 [license-image]: https://img.shields.io/npm/l/eruda-orientation.svg
 
 Eruda plugin for testing orientation api.
@@ -15,7 +15,7 @@ Eruda plugin for testing orientation api.
 ## Demo
 
 Browse it on your phone: 
-[http://eruda.liriliri.io/?plugin=orientation](http://eruda.liriliri.io/?plugin=orientation)
+[https://eruda.liriliri.io/?plugin=orientation](https://eruda.liriliri.io/?plugin=orientation)
 
 ## Install
 
