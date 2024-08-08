@@ -21,7 +21,7 @@
             '.eruda-dev-tools .eruda-tools .eruda-orientation {padding: 10px; overflow-y: auto; -webkit-overflow-scrolling: touch;}',
             '.eruda-not-supported {background: var(--console-error-background); color: var(--console-error-foreground); border: 1px solid var(--console-error-border);padding: 10px; text-align: center;}',
             '.eruda-cube {width: 150px; height: 150px; color: var(--foreground); position: relative; margin: 50px auto; -webkit-transform-style: preserve-3d; transform-style: preserve-3d;}',
-            '.eruda-face {width: 150px; height: 150px; position: absolute; font-size: 80px; text-align: center; line-height: 150px; background-color: var(--accent); box-shadow: inset 0 0 20px var(--foreground); opacity: 0.6; }',
+            '.eruda-face {width: 150px; height: 150px; position: absolute; font-size: 80px; text-align: center; line-height: 150px; background-color: var(--accent); border: 1px solid var(--border); opacity: 0.6; }',
             '.eruda-one {-webkit-transform: translateZ(75px); transform: translateZ(75px);}',
             '.eruda-two {-webkit-transform: rotateY(90deg) translateZ(75px); transform: rotateY(90deg) translateZ(75px);}',
             '.eruda-three {-webkit-transform: rotateY(180deg) translateZ(75px); transform: rotateY(180deg) translateZ(75px);}',
@@ -167,39 +167,31 @@
           $interval.text(e.interval + 'ms')
         }
 
-        function requestOrientationPermission() {
-          DeviceOrientationEvent.requestPermission().then(function (response) {
-            if (response === 'granted') {
-              window.addEventListener(
-                'deviceorientation',
-                this._onDeviceorientation
-              )
-              $cube.off('click', requestOrientationPermission)
-            }
-          })
-        }
-        if (DeviceOrientationEvent.requestPermission) {
-          $cube.on('click', requestOrientationPermission)
-        } else {
-          window.addEventListener(
-            'deviceorientation',
-            this._onDeviceorientation
-          )
+        function bind(type) {
+          var Event = DeviceOrientationEvent
+          var eventName = 'deviceorientation'
+          var listener = self._onDeviceorientation
+          if (type === 'motion') {
+            Event = DeviceMotionEvent
+            eventName = 'devicemotion'
+            listener = self._onDevicemotion
+          }
+
+          function requestPermission() {
+            Event.requestPermission().then(function (response) {
+              if (response === 'granted') {
+                $cube.off('click', requestPermission)
+              }
+            })
+          }
+          if (Event.requestPermission) {
+            $cube.on('click', requestPermission)
+          }
+          window.addEventListener(eventName, listener)
         }
 
-        function requestMotionPermission() {
-          DeviceMotionEvent.requestPermission().then(function (response) {
-            if (response === 'granted') {
-              window.addEventListener('devicemotion', this._onDevicemotion)
-              $cube.off('click', requestMotionPermission)
-            }
-          })
-        }
-        if (DeviceMotionEvent.requestPermission) {
-          $cube.on('click', requestMotionPermission)
-        } else {
-          window.addEventListener('devicemotion', this._onDevicemotion)
-        }
+        bind('orientation')
+        bind('motion')
       },
       show: function () {
         this.callSuper(Tool, 'show', arguments)

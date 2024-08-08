@@ -1,6 +1,6 @@
 {
   "name": "eruda-orientation",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "eruda-orientation.js",
   "description": "Eruda plugin for testing orientation api",
   "files": [

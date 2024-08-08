@@ -1,3 +1,7 @@
+## v2.1.1 (8 Aug 2024)
+
+* fix: safari not working
+
 ## v2.1.0 (7 Aug 2024)
 
 * fix: safari not working
