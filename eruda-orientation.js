@@ -1,4 +1,5 @@
-// https://code.tutsplus.com/tutorials/an-introduction-to-the-device-orientation-api--cms-21067
+// https://web.archive.org/web/20220706180035/https://code.tutsplus.com/tutorials/an-introduction-to-the-device-orientation-api--cms-21067
+// https://web.archive.org/web/20240228232046/https://dev.opera.com/articles/w3c-device-orientation-usage/
 ;(function (root, factory) {
   if (typeof define === 'function' && define.amd) {
     define([], factory)
@@ -11,6 +12,98 @@
   return function (eruda) {
     var Tool = eruda.Tool
     var util = eruda.util
+
+    var degtorad = Math.PI / 180
+
+    function convertToRotationMatrix(alpha, beta, gamma) {
+      var _x = beta * degtorad
+      var _y = gamma * degtorad
+      var _z = alpha * degtorad
+
+      var cX = Math.cos(_x)
+      var cY = Math.cos(_y)
+      var cZ = Math.cos(_z)
+      var sX = Math.sin(_x)
+      var sY = Math.sin(_y)
+      var sZ = Math.sin(_z)
+
+      // ZXY-ordered rotation matrix construction.
+
+      var m11 = cZ * cY - sZ * sX * sY
+      var m12 = -cX * sZ
+      var m13 = cY * sZ * sX + cZ * sY
+
+      var m21 = cY * sZ + cZ * sX * sY
+      var m22 = cZ * cX
+      var m23 = sZ * sY - cZ * cY * sX
+
+      var m31 = -cX * sY
+      var m32 = sX
+      var m33 = cX * cY
+
+      // prettier-ignore
+      return [
+        m11, m12, m13,
+        m21, m22, m23,
+        m31, m32, m33
+      ]
+    }
+
+    function getScreenOrientationRotationMatrix(screenOrientation) {
+      var orientationAngle = screenOrientation * degtorad
+
+      var cA = Math.cos(orientationAngle)
+      var sA = Math.sin(orientationAngle)
+
+      // prettier-ignore
+      return [
+        cA, -sA, 0,
+        sA, cA, 0,
+        0, 0, 1
+      ]
+    }
+
+    function matrixMultiply(a, b) {
+      return [
+        a[0] * b[0] + a[1] * b[3] + a[2] * b[6],
+        a[0] * b[1] + a[1] * b[4] + a[2] * b[7],
+        a[0] * b[2] + a[1] * b[5] + a[2] * b[8],
+
+        a[3] * b[0] + a[4] * b[3] + a[5] * b[6],
+        a[3] * b[1] + a[4] * b[4] + a[5] * b[7],
+        a[3] * b[2] + a[4] * b[5] + a[5] * b[8],
+
+        a[6] * b[0] + a[7] * b[3] + a[8] * b[6],
+        a[6] * b[1] + a[7] * b[4] + a[8] * b[7],
+        a[6] * b[2] + a[7] * b[5] + a[8] * b[8],
+      ]
+    }
+
+    function computeCubeRotationMatrix(alpha, beta, gamma) {
+      var rotationMatrix = convertToRotationMatrix(-alpha, -beta, gamma)
+
+      var screenTransform = getScreenOrientationRotationMatrix(
+        (screen.orientation && screen.orientation.angle) || 0
+      )
+      var screenAdjustedMatrix = matrixMultiply(rotationMatrix, screenTransform)
+
+      return screenAdjustedMatrix
+    }
+
+    function convertRotationMatrixToTransform(r) {
+      // prettier-ignore
+      return [
+        r[0], r[1], r[2], 0,
+        r[3], r[4], r[5], 0,
+        r[6], r[7], r[8], 0,
+        0, 0, 0, 1,
+      ]
+    }
+
+    function convertRotationMatrixToCssTransform(rotationMatrix) {
+      var transformMatrix = convertRotationMatrixToTransform(rotationMatrix)
+      return 'matrix3d(' + transformMatrix.join(', ') + ')'
+    }
 
     var Orientation = Tool.extend({
       name: 'orientation',
@@ -105,18 +198,8 @@
         this._onDeviceorientation = function (e) {
           if (!self._isShow) return
 
-          $cube.css(
-            'transform',
-            'rotateX(' +
-              e.beta +
-              'deg) ' +
-              'rotateY(' +
-              e.gamma +
-              'deg) ' +
-              'rotateZ(' +
-              e.alpha +
-              'deg)'
-          )
+          var matrix = computeCubeRotationMatrix(e.alpha, e.beta, e.gamma)
+          $cube.css('transform', convertRotationMatrixToCssTransform(matrix))
 
           $coordinates.text(
             '(' +
